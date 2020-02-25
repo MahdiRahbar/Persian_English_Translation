@@ -12,6 +12,7 @@ import unicodedata
 import string
 import re
 import random
+from hazm import *
 
 import torch
 import torch.nn as nn
@@ -45,3 +46,25 @@ class Lang:
             self.n_words += 1
         else:
             self.word2count[word] += 1
+
+# Turn a Unicode string to plain ASCII, thanks to
+# https://stackoverflow.com/a/518232/2809427
+def unicodeToAscii(s):   # For English String
+    return ''.join(
+        c for c in unicodedata.normalize('NFD', s)
+        if unicodedata.category(c) != 'Mn'
+    )
+
+# Lowercase, trim, and remove non-letter characters
+
+
+def normalizeEngString(s):  #normalizeString()
+    s = unicodeToAscii(s.lower().strip())
+    s = re.sub(r"([.!?])", r" \1", s)
+    s = re.sub(r"[^a-zA-Z.!?]+", r" ", s)
+    return s
+
+def normalizePerString(s):
+    normalizer = Normalizer()
+    s = normalizer.normalize(s)
+    return s
